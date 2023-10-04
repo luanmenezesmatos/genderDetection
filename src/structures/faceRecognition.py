@@ -6,5 +6,11 @@ class FaceRecognition:
         return DeepFace.extract_faces(img)
     
     # Reconhecer rostos
-    def verify(self, img1, img2):
+    def verifyFace(self, img1, img2):
         return DeepFace.verify(img1, img2)
+    
+    def analyzeFace(self, img):
+        attributesArr = ['age', 'gender', 'race', 'emotion']
+        predictions = DeepFace.analyze(img, attributesArr)
+
+        return predictions
