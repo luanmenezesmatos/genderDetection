@@ -13,4 +13,4 @@ class FaceRecognition:
         attributesArr = ['age', 'gender', 'race', 'emotion']
         predictions = DeepFace.analyze(img, attributesArr)
 
-        return predictions
+        return predictions[0]
