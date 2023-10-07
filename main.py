@@ -4,9 +4,7 @@ from src.structures.handleError import handleError # Função para tratar erros
 from src.structures.handleUtil import handleUtil # Função para tratar utilidades
 from src.structures.handleGraph import HandleGraph # Função para tratar gráficos
 
-import requests # Biblioteca para fazer requisições HTTP
 import os # Biblioteca para trabalhar com diretórios
-from PIL import Image # Biblioteca para trabalhar com imagens
 
 select = selectOption("Como você deseja analisar a imagem?", ["Analisar uma imagem pelo arquivo do diretório local", "Analisar uma imagem pela URL"]).choose()
 
@@ -41,6 +39,10 @@ match select:
 
         # Função para acessar a imagem usando o requests.get() e baixar localmente em uma pasta temporária
         downloaded_image = handleUtil(image_url).downloadImage()
+
+        if not downloaded_image:
+            handleError("Ocorreu um erro ao baixar a imagem! Tente novamente.", 500).sendErrorMessage()
+            exit()
 
         if os.path.exists(downloaded_image):
             detectFace = FaceRecognition().detectFace(downloaded_image)

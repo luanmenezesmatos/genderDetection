@@ -34,14 +34,21 @@ class handleUtil:
         return True
     
     def downloadImage(self):
-        # Pegar o timestamp atual
-        timestamp = str(int(time.time()))
+        try:
+            # Verificar se na url informada possui um "?", e se tiver, remover tudo que estiver depois dele
+            if '?' in self.img_path:
+                self.img_path = self.img_path.split('?')[0]
 
-        # Pegar a extensão da imagem
-        extension = self.img_path.split('.')[-1]
+            # Pegar o timestamp atual
+            timestamp = str(int(time.time()))
 
-        image_path = os.getcwd() + f'/src/assets/temp/temp-{timestamp}.{extension}'
-        with open(image_path, 'wb') as file:
-            file.write(requests.get(self.img_path).content)
-        
-        return image_path
+            # Pegar a extensão da imagem
+            extension = self.img_path.split('.')[-1]
+
+            image_path = os.getcwd() + f'/src/assets/temp/temp-{timestamp}.{extension}'
+            with open(image_path, 'wb') as file:
+                file.write(requests.get(self.img_path).content)
+            
+            return image_path
+        except:
+            return False
