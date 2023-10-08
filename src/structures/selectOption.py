@@ -10,5 +10,9 @@ class selectOption:
         print()
 
     def choose(self):
-        self.show()
-        return int(input("Escolha uma opção: "))
+        try:
+            self.show()
+            return int(input("Escolha uma opção: "))
+        except:
+            print("Opção inválida! Tente novamente.")
+            exit()

@@ -5,7 +5,7 @@ import os # Biblioteca para trabalhar com diretórios
 import time # Biblioteca para trabalhar com tempo
 
 class handleUtil:
-    def __init__(self, img_path):
+    def __init__(self, img_path=None):
         self.img_path = img_path
 
     def verifyUrl(self):
@@ -50,5 +50,12 @@ class handleUtil:
                 file.write(requests.get(self.img_path).content)
             
             return image_path
+        except:
+            return False
+        
+    def saveGraph(self, plt):
+        try:
+            graph_path = os.path.join(os.getcwd(), 'src', 'assets', 'graphs', 'genderGraph.png') # Define o caminho do gráfico
+            plt.savefig(graph_path) # Salva o gráfico no caminho especificado (diretório local)
         except:
             return False
