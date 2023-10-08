@@ -33,7 +33,7 @@ class graphLayout:
         self.apply_font()
 
         # Importar a função para definir os parâmetros do gráfico
-        self.params(type='pie', bold_title=True, bold_label=True, bold_legend=True, title_size=20, label_size=12, legend_size='large')
+        self.params(type='pie', bold_title=True, bold_label=True, bold_legend=True, title_size=20, legend_size='large')
 
         # Assegura que o gráfico de pizza seja um círculo.
         self.plt.axis('equal')
@@ -44,7 +44,7 @@ class graphLayout:
     def bar(self, title):
         self.plt.title(title)
 
-    def params(self, type, bold_title=False, bold_label=False, bold_legend=False, title_size=20, label_size=12, legend_size='large'):
+    def params(self, type, bold_title=False, bold_label=False, bold_legend=False, title_size=16, legend_size='large'):
         if type == 'pie':
             """ self.plt.rcParams['font.family'] = 'Roboto' # Define a fonte do gráfico
             # Aumentando o tamanho do título do gráfico

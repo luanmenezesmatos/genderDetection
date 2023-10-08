@@ -13,14 +13,40 @@ select = selectOption("Como você deseja analisar a imagem?", ["Analisar uma ima
 
 match select:
     case 1:
-        image_path = input("Digite o caminho da imagem: ")
+        # Criar uma expressão ternária, verificando se usará o diretório local do computador do desenvolvedor ou do Senac
+        computer_image_path = os.getenv('MY_OWN_COMPUTER_IMAGE_PATH') if appConfig().is_my_computer else os.getenv('SENAC_COMPUTER_IMAGE_PATH')
+        
+        if appConfig().is_development:
+            print("Entrou em fase de desenvolvimento")
 
-        # Verificar se o arquivo existe no diretório local
-        if not handleUtil(image_path).verifyLocalPath():
-            handleError("O arquivo não é uma imagem", 400).sendErrorMessage()
+            image_path = computer_image_path
+
+            # Verificar se o arquivo existe no diretório local
+            if not handleUtil(image_path).verifyLocalPath():
+                handleError("O arquivo não é uma imagem", 400).sendErrorMessage()
+                exit()
+            
+            # Ler um arquivo de exemplo em JSON para testar as funções de análise de imagem e geração de gráficos
+            with open(os.getcwd() + '/predictions.json', 'r') as file:
+                data = json.load(file)
+
+            HandleGraph(predictions=data, app_environment='development').dataProcessing()
+        elif appConfig().is_production:
+            print("Entrou em fase de produção")
+
+            image_path = input("Digite o caminho da imagem: ")
+
+            # Verificar se o arquivo existe no diretório local
+            if not handleUtil(image_path).verifyLocalPath():
+                handleError("O arquivo não é uma imagem", 400).sendErrorMessage()
+                exit()
+
+            face = FaceRecognition().analyzeFace(image_path)
+
+            HandleGraph(predictions=face, app_environment='production').dataProcessing()
+        else:
+            print("O modo escolhido no arquivo de configuração (.env) não é válido!")
             exit()
-
-        face = FaceRecognition().analyzeFace(image_path)
     case 2:
         # Criar uma expressão ternária, verificando no appConfig() se o modo escolhido é 'development' ou 'production', e se for 'development', usar uma URL de exemplo, caso contrário, usar a URL informada pelo usuário
         image_url = os.getenv('EXAMPLE_IMAGE_URL') if appConfig().is_development else input("Digite a URL da imagem: ")
@@ -80,27 +106,9 @@ match select:
                 handleError("Não foi possível detectar nenhum rosto na imagem!", 400).sendErrorMessage()
                 os.remove(downloaded_image)
                 exit()
-
-            """ face = FaceRecognition().analyzeFace(downloaded_image)
-            os.remove(downloaded_image)
-
-            print(face) """
         else:
             handleError("Ocorreu um erro ao baixar a imagem!", 500).sendErrorMessage()
             exit()
-
-        # Analisar a imagem usando o DeepFace.analyze()
-        # face = FaceRecognition().analyzeFace(requests.get(image_url, stream=True).raw)
-
-        #print(face)
     case _:
         handleError("Opção inválida! Tente novamente.", 400).sendErrorMessage()
         exit()
-
-""" # Testar a função detectFace
-image_path = os.getcwd() + '/src/assets/images/rosto-feminino.jpg'
-face = FaceRecognition().analyzeFace(image_path)
-
-# data = face['age']
-
-print(face) """
