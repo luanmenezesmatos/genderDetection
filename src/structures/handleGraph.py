@@ -1,13 +1,22 @@
-import pandas as pd # Para trabalhar com dataframes
-
 from src.structures.graph.genderGraph import genderGraph
 
+import pandas as pd # Para trabalhar com dataframes
+import os # Biblioteca para trabalhar com diretórios
+
+appEnv = os.getenv('APP_ENV')
+
 class HandleGraph:
-    def __init__(self, predictions):
+    def __init__(self, predictions, app_environment=appEnv):
         self.predictions = predictions
+        self.app_environment = app_environment
 
     def dataProcessing(self):
-        # Criar um dataframe
-        dataframe = pd.DataFrame(self.predictions)
+        if self.app_environment == 'development':
+            dataframe = pd.DataFrame(self.predictions)
 
-        genderGraph(dataframe).generate()
+            genderGraph(dataframe).generate()
+        elif self.app_environment == 'production':
+            # Criar um dataframe
+            dataframe = pd.DataFrame(self.predictions)
+
+            genderGraph(dataframe).generate()

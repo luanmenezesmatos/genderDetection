@@ -4,7 +4,10 @@ from src.structures.handleError import handleError # Função para tratar erros
 from src.structures.handleUtil import handleUtil # Função para tratar utilidades
 from src.structures.handleGraph import HandleGraph # Função para tratar gráficos
 
+from config import appConfig # Configurações do app
+
 import os # Biblioteca para trabalhar com diretórios
+import json # Biblioteca para trabalhar com JSON
 
 select = selectOption("Como você deseja analisar a imagem?", ["Analisar uma imagem pelo arquivo do diretório local", "Analisar uma imagem pela URL"]).choose()
 
@@ -18,10 +21,9 @@ match select:
             exit()
 
         face = FaceRecognition().analyzeFace(image_path)
-
-        print(face)
     case 2:
-        image_url = input("Digite a URL da imagem: ")
+        # Criar uma expressão ternária, verificando no appConfig() se o modo escolhido é 'development' ou 'production', e se for 'development', usar uma URL de exemplo, caso contrário, usar a URL informada pelo usuário
+        image_url = os.getenv('EXAMPLE_IMAGE_URL') if appConfig().is_development else input("Digite a URL da imagem: ")
 
         # Verificar se a URL informada existe usando o requests.get()
         if not handleUtil(image_url).verifyUrl():
@@ -47,11 +49,33 @@ match select:
         if os.path.exists(downloaded_image):
             detectFace = FaceRecognition().detectFace(downloaded_image)
             if detectFace:
-                analyzeFace = FaceRecognition().analyzeFace(downloaded_image)
+                print("Rosto detectado!")
 
-                os.remove(downloaded_image)
+                config = appConfig()
 
-                HandleGraph(analyzeFace).dataProcessing()
+                if config.is_production:
+                    print("Entrou em fase de produção")
+
+                    analyzeFace = FaceRecognition().analyzeFace(downloaded_image)
+
+                    os.remove(downloaded_image)
+
+                    HandleGraph(predictions=analyzeFace, app_environment='production').dataProcessing()
+                elif config.is_development:
+                    print("Entrou em fase de desenvolvimento")
+
+                    os.remove(downloaded_image)
+                    
+                    # Ler um arquivo de exemplo em JSON para testar as funções de análise de imagem e geração de gráficos
+                    with open(os.getcwd() + '/predictions.json', 'r') as file:
+                        data = json.load(file)
+
+                    HandleGraph(predictions=data, app_environment='development').dataProcessing()
+                else:
+                    os.remove(downloaded_image)
+
+                    print("O modo escolhido no arquivo de configuração (.env) não é válido!")
+                    exit()
             else:
                 handleError("Não foi possível detectar nenhum rosto na imagem!", 400).sendErrorMessage()
                 os.remove(downloaded_image)

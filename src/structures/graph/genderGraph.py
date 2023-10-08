@@ -54,7 +54,5 @@ class genderGraph:
                                 title='Porcentagem de Gênero')  # Configurações do gráfico de pizza
 
         handleUtil().saveGraph(plt) # Salva o gráfico no diretório local
-        
-        graphLayout().apply_font() # Aplica as fontes
 
         plt.show() # Exibe o gráfico
