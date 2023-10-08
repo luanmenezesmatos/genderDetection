@@ -33,18 +33,22 @@ class graphLayout:
         self.apply_font()
 
         # Importar a função para definir os parâmetros do gráfico
-        self.params(type='pie', bold_title=True, bold_label=True, bold_legend=True, title_size=20, legend_size='large')
+        self.params(type='pie', bold_title=False, medium_title=True)
 
         # Assegura que o gráfico de pizza seja um círculo.
         self.plt.axis('equal')
 
-        self.plt.title(title) # Define o título do gráfico
+        # Define o título do gráfico
+        self.plt.title(title)
+
+        # Inserir legenda no gráfico
+        self.plt.legend(labels, title='Gênero', loc='best')
 
     # Configurações do gráfico de barras
     def bar(self, title):
         self.plt.title(title)
 
-    def params(self, type, bold_title=False, bold_label=False, bold_legend=False, title_size=16, legend_size='large'):
+    def params(self, type, bold_title=False, medium_title=False, legend_size=10, bold_legend='normal', title_size=16):
         if type == 'pie':
             """ self.plt.rcParams['font.family'] = 'Roboto' # Define a fonte do gráfico
             # Aumentando o tamanho do título do gráfico
@@ -58,15 +62,16 @@ class graphLayout:
             # Alterando o tamanho da fonte da legendas
             self.plt.rcParams['legend.fontsize'] = 'large' """
 
+            # Alterando o tamanho da figura (largura, altura)
+            self.plt.rcParams['figure.figsize'] = (13, 7)
+
             self.plt.rcParams['font.family'] = 'Roboto' # Define a fonte do gráfico
 
             self.plt.rcParams['axes.titlesize'] = title_size # Define o tamanho do título do gráfico
 
             # Alterar o estilo das fontes (bold) para os títulos e legendas do gráfico
-            # Alterando o peso da fonte do título do eixo X e Y
-            self.plt.rcParams['axes.labelweight'] = 'bold' if bold_label else 'normal'
             # Alterando o peso da fonte do título do gráfico
-            self.plt.rcParams['axes.titleweight'] = 'bold' if bold_title else 'normal'
+            self.plt.rcParams['axes.titleweight'] = 'bold' if bold_title else 'normal' or 'medium' if medium_title else 'normal'
             # Alterando o tamanho da fonte da legendas
             self.plt.rcParams['legend.fontsize'] = legend_size if legend_size != 'large' else 'large' if bold_legend else 'medium' # Caso o tamanho da legenda seja 'large', então o peso da fonte será 'large' se não, será 'medium'
         elif type == 'bar':
