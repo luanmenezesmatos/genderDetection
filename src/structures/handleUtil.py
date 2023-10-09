@@ -59,3 +59,13 @@ class handleUtil:
             plt.savefig(graph_path) # Salva o gráfico no caminho especificado (diretório local)
         except:
             return False
+        
+    def createFolders(self):
+        try:
+            if not os.path.exists(os.path.join(os.getcwd(), 'src', 'assets', 'temp')):
+                os.makedirs(os.path.join(os.getcwd(), 'src', 'assets', 'temp'))
+
+            if not os.path.exists(os.path.join(os.getcwd(), 'src', 'assets', 'graphs')):
+                os.makedirs(os.path.join(os.getcwd(), 'src', 'assets', 'graphs'))
+        except:
+            return False

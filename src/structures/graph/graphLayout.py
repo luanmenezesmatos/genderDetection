@@ -14,6 +14,26 @@ class graphLayout:
         for file in fonts_files:
             font_manager.fontManager.addfont(file)
 
+    def add_font_entries(self):
+        fonts_path = os.path.join(os.getcwd(), 'src', 'assets', 'fonts')
+
+        if not os.path.exists(fonts_path):
+            os.mkdir(fonts_path)
+
+        # Pegar todos os nomes dos arquivos presentes na pasta e remover o .ttf de cada um
+        # fonts_files_ttf = [file for file in os.listdir(fonts_path) if file.endswith('.ttf')]
+        fonts_files = [file.split('.')[0] for file in os.listdir(fonts_path)]
+        
+        # Adicionar as fontes
+        for file in fonts_files:
+            fe = font_manager.FontEntry(
+                fname=os.path.join(fonts_path, f'{file}.ttf'),
+                name=file
+            )
+
+            font_manager.fontManager.ttflist.insert(0, fe)
+
+
     # Configurações do gráfico de pizza
     def pie(self, sizes, explode, labels, colors, title):
         # Criar um gráfico de pizza
@@ -29,11 +49,8 @@ class graphLayout:
         # pctdistance - Define a distância dos valores numéricos em relação ao centro do gráfico
         # wedgeprops - Define as propriedades das fatias (borda)
 
-        # Importar a função para manipular fontes
-        self.apply_font()
-
         # Importar a função para definir os parâmetros do gráfico
-        self.params(type='pie', bold_title=False, medium_title=True)
+        self.params(type='pie', bold_title=False, medium_title=False)
 
         # Assegura que o gráfico de pizza seja um círculo.
         self.plt.axis('equal')
@@ -62,12 +79,21 @@ class graphLayout:
             # Alterando o tamanho da fonte da legendas
             self.plt.rcParams['legend.fontsize'] = 'large' """
 
+            # Importar a função para manipular fontes
+            self.apply_font()
+            self.add_font_entries()
+
             # Alterando o tamanho da figura (largura, altura)
             self.plt.rcParams['figure.figsize'] = (13, 7)
 
-            self.plt.rcParams['font.family'] = 'Roboto' # Define a fonte do gráfico
+            # Definindo a fonte do gráfico e o estilo
+            self.plt.rcParams['font.family'] = 'Roboto-Regular'
 
-            self.plt.rcParams['axes.titlesize'] = title_size # Define o tamanho do título do gráfico
+            # Aumentando o tamanho da label do gráfico
+            self.plt.rcParams['axes.labelweight'] = 'bold'
+
+            # Definindo o tamanho do título do gráfico
+            self.plt.rcParams['axes.titlesize'] = title_size
 
             # Alterar o estilo das fontes (bold) para os títulos e legendas do gráfico
             # Alterando o peso da fonte do título do gráfico

@@ -9,6 +9,8 @@ from config import appConfig # Configurações do app
 import os # Biblioteca para trabalhar com diretórios
 import json # Biblioteca para trabalhar com JSON
 
+handleUtil().createFolders() # Criar as pastas necessárias para o funcionamento do app
+
 select = selectOption("Como você deseja analisar a imagem?", ["Analisar uma imagem pelo arquivo do diretório local", "Analisar uma imagem pela URL"]).choose()
 
 match select:
