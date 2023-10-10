@@ -26,7 +26,14 @@ class genderGraph:
         labels = ['Mulher', 'Homem']
         sizes = [woman_percentage, man_percentage]
         colors = ['pink', 'lightsteelblue']
-        explode = (0.1, 0)  # Explodir a primeira fatia (Mulher)
+        
+        # Fazer com que o explode seja dinâmico, ou seja, explodir a fatia com maior porcentagem
+        explode = []
+        for i in range(len(sizes)):
+            if sizes[i] == max(sizes):
+                explode.append(0.1)
+            else:
+                explode.append(0)
 
         # Criar um gráfico de pizza
         plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',

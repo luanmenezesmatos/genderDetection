@@ -69,9 +69,6 @@ class graphLayout:
             self.apply_font()
             self.add_font_entries()
 
-            # Alterando o tamanho da figura (largura, altura)
-            self.plt.rcParams['figure.figsize'] = (13, 7)
-
             # Definindo a fonte do gráfico e o estilo
             self.plt.rcParams['font.family'] = 'Roboto-Regular'
 
